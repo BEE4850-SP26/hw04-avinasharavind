@@ -1,4 +1,4 @@
-Column1,death,pm10median,pm25median,o3median,so2median,time,tmpd
+idx,death,pm10median,pm25median,o3median,so2median,time,tmpd
 1,130,-7.433544304,NA,-19.59233786,1.9280425967,-2556.5,31.5
 2,150,NA,NA,-19.03861366,-0.985563116,-2555.5,33.0
 3,101,-0.826530612,NA,-20.21733786,-1.891416086,-2554.5,33.0

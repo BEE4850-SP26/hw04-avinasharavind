@@ -1,15 +1,17 @@
 ---
-title: "Homework 4: Model Evaluation and Comparison"
-subtitle: "BEE 4850/5850, Fall 2025"
+title: "Homework 4: Model Selecction"
+subtitle: "BEE 4850/5850"
+date: "03-27-2026"
+author: "Avinash Aravind, aa2476"
 format:
-    html:        
-        warning: true
-        error: true
-        fig-format: svg
     pdf:
         warning: true
         error: true
         keep-tex: true
+        fig-pos: "h"
+        toc: true
+        toc-depth: 3
+        toc-title: Contents
         fig-format: svg    
         include-in-header: 
             text: |
@@ -24,151 +26,82 @@ format:
                 breaklines
                 % Note: setting commandchars=\\\{\} here will cause an error 
                 }
+        margin-bottom: "30mm"
+        margin-top: "30mm"
     ipynb:
         warning: true
         error: true
-engine: julia
-julia:
-    exeflags: ["+1.11.5"]
 format-links: [pdf]
 freeze: false
 ---
-
-::: {.content-visible when-format="ipynb"}
-**Name**:
-
-**ID**:
+::: {.callout-note}
+All of the code used in this homework is accessible in the hw04.ipynb file in my GitHub repository.
 :::
-
-::: {.callout-important icon=false}
-### Due Date
-
-Friday, 3/27/26, 9:00pm
-:::
-
-::: {.content-visible unless-format="ipynb"}
-:::{.callout-tip}
-
-To do this assignment in Julia, you can find a Jupyter notebook with an appropriate environment in [the homework's Github repository]({{< var github_org.repo >}}/hw04). Otherwise, you will be responsible for setting up an appropriate package environment in the language of your choosing. Make sure to include your name and NetID on your solution.
-:::
-:::
-
-## Overview
-
-::: {.cell .markdown}
-
-### Instructions
-
-The goal of this homework assignment is to practice model evaluation and using cross-validation and information criteria to distinguish between models.
-
-* Problem 1 asks you to fit a model for cherry blossom bloom dates and use cross-validation to draw conclusions about generalizability.
-* Problem 2 asks you to compare several linear regression models for environmental influences on non-accidental death data.
-
-
-
-### Load Environment
-
-The following code loads the environment and makes sure all needed packages are installed. This should be at the start of most Julia scripts.
-
-:::
-
-```{julia}
-#| output: false
-
-import Pkg
-Pkg.activate(@__DIR__)
-Pkg.instantiate()
+```{=latex}
+\newpage
 ```
 
-The following packages are included in the environment (to help you find other similar packages in other languages). The code below loads these packages for use in the subsequent notebook (the desired functionality for each package is commented next to the package).
+# Problem 1: Cherry Blossoms and Temperature
+### Problem 1.1
 
+![March Temperature Anomalies and Cherry Blossom Bloom Date]("figs/11.png"){#fig-11 width=4.5in}
 
-```{julia}
-#| output: false
+The linear fit suggests that increasing temprature anomalies lead to a decrease in the date of year that the cherry blossom bloom peaks; that is, the bloom occurs earlier in the year. The slope of fit is about -7.8, which suggests that a 1 degree C increase in temperature anomaly leads to a bloom more than one week earlier. 
 
-using Random # random number generation and seed-setting
-using DataFrames # tabular data structure
-using DataFramesMeta # API which can simplify chains of DataFrames transformations
-using CSV # reads/writes .csv files
-using Distributions # interface to work with probability distributions
-using Plots # plotting library
-using StatsBase # statistical quantities like mean, median, etc
-using StatsPlots # some additional statistical plotting tools
-using Optim # optimization package for model fitting
-using Dates # API for date-time data structures
+### Problem 1.2
+
+The mean-squared error for this fitted model on the in-sample data is about 22.32. I was unfortunately having trouble implementing the log-loss in my code; I will attempt to understand how to implement this after the solutions are released.
+
+### Problem 1.3
+
+Using 5-fold cross-validation, the mean-squred errors for each fold were roughly similar to the in-sample data, with MSE values from my run of 34.68, 23.15, 20.46, 22.82, and 18.74. Some of the folds have a lower/better MSE than the full dataset, and some have a higher/worse MSE, but there are no major differences.
+
+```{=latex}
+\newpage
 ```
+### Problem 1.4
 
-## Problems 
+This model is relatively generalizable. The 5-fold cross-validation did not produce meaningfully worse MSE values than the in-sample model, suggesting that the model was not learning much more information from the full dataset that it could not learn from a much smaller subset. Thus, this model should be similarly good at predicting unseen values as it is at predicting in-sample values.
 
-### Scoring
-
-* Problem 1 is worth 10 points;
-* Problem 2 is worth 15 points;
-
-### Problem 1
-
-Let's examine the influence of global temperature change on the blooming day of cherry blossoms in Kyoto. While these dates are discrete, we will use a linear regression model relating the day to the global mean temperature anomaly for March (the third non-year column in `data/HadCRUT5.1Analysis_gl.txt`).
-
-#### Problem 1.1
-
-Load the data and fit this model. What does your fitted model suggest as the influence of March temperature anomalies on the cherry blossom date?
-
-#### Problem 1.2
-
-Calculate the log-loss (negative log-probability) and mean-squared error metrics for the fitted model on the in-sample data. 
-
-#### Problem 1.3
-
-Conduct a 5-fold cross-validation for the model using both of these metrics. How do they compare to the in-sample metrics?
-
-#### Problem 1.4
-
-What conclusions can you draw about the model's generalizability?
- 
-
-### Problem 2
-
-Let's re-examine the influence of air pollution and temperature on mortality in Chicago, IL.  The `data/chicago.csv` dataset (originally from the [`gamair` `R` package](https://cran.r-project.org/web/packages/gamair/index.html))contains data on the relationship between environmental conditions (temperature and air quality) and deaths in Chicago from 1987--2000. The variables are:
-
-* the total number of (non-accidental)
-deaths each day (`death`); 
-* the median density over the city of large pollutant particles (PM10; `pm10median`); 
-* the median density of smaller pollutant particles (PM2.5; `pm25median`); 
-* the median concentration of ozone (O$_3$) in the air (`o3median`); the median concentration of sulfur dioxide (SO$_2$) in the air (`so2median`); 
-* the time in days (`time`); and the daily mean temperature (`tmpd`). 
-
-The pollution variables have been standardized to represent deviations from the overall median and the temperature is in Fahrenheit. The days are given as a number of days relative to December 31, 1993. Note that some values are missing; these can be treated as missing at random and dropped in your regressions.
-
-```{julia}
-#| label: chicago-deaths
-
-chicago_dat = CSV.read("data/chicago.csv", DataFrame; delim=',', header=true, missingstring="NA") # <1>
-day_zero = Date("1993-12-31")
-chicago_dat.Date = day_zero .+ Day.(chicago_dat.time .+ 0.5) # <2>
-
-plot(chicago_dat.Date, chicago_dat.death, lw=2, xlabel="Date", ylabel="Non-Accidental Deaths)", legend=false)
+```{=latex}
+\newpage
 ```
-1. The datafile imports columns with `NA` values by default as `String` types, but we want them to be numerical, so we need to explicitly ask `CSV.read` to read in columns as `Float`.
-2. To get the correct calendar date, we need to add 0.5 to the `time` column to make the offset into integers.
+# Problem 2: Back in Chicago
+### Problem 2.1
 
-#### Problem 2.1
+![Chicago Deaths vs. Time with Linear Fit]("figs/21.png"){#fig-21 width=4.5in}
 
-Load and plot the deaths data. Linearly regress the number of deaths against time and report the coefficients for the fitted model. Add the regression line to your plot. What does this regression tell you?
+The linear regression coefficient for this fit is -1.76e-17, very close to zero, and the intercept is 128.75. As visible in @fig-21, there is basically no change in the model predicted number of deaths through time, predicting about 129 deaths throughout the time period. 
 
-#### Problem 2.2
+```{=latex}
+\newpage
+```
+### Problem 2.2
 
-Now linearly regress the deaths data against temperature. Once again, report the coefficients, and add the regression line to your plot. What does this regression tell you about the influence of temperature?
+![Chicago Deaths vs. Temperature with Linear Fit]("figs/22.png"){#fig-22 width=4.5in}
 
-#### Problem 2.3
+The linear regression coefficient for this fit is -0.29, and the intercept is 129.96. Unlike the time fit, there is a trend in @fig-22, with the coefficient suggesting that the model predicts a decrease of a bit less than 1 death per 3 degrees increase in mean daily temperature. The scatterplot of data appears to follow this decreasing trend; however, the model grossly underestimates the very high deaths during the heat wave.
 
-Expand your previous model by regressing deaths against temperature and PM2.5 density. Report the coefficients and add this regression line to your plot. 
+```{=latex}
+\newpage
+```
+### Problem 2.3
 
-#### Problem 2.4
+![Chicago Deaths vs. Temperature with Linear Fit incorporating PM25]("figs/23.png"){#fig-23 width=4.5in}
 
-Conduct a 5-fold cross-validation for the temperature only and temperature and PM2.5 models, using both the mean-squared-error and log-probability metrics. Are there any structures in the dataset that you need to account for when developing your cross-validation folds? Which model performs the best? What can you conclude from this analysis?
+The linear regression coefficients for this fit are -0.37 and 0.215, and the intercept is 129.29. When incorporating the median pm25 concentration, the model predicts a greater decrease in temperature for a given decrease in . However, it also predicts an increase in deaths with increasing pm25 concentration. The resulting slope in @fig-23 is thus very similar to the one in @fig-22. 
 
-#### Problem 2.5
+```{=latex}
+\newpage
+```
+### Problem 2.4
 
-Compute the AICs for the three fitted models and compare them. What do they tell you about the relative evidence for the influence of temperature and PM2.5 density on deaths? How do your conclusions based on AIC compare to those you might draw from your regression coefficients, plots, and cross-validation?
+For the model with temperature only, the 5-fold cross-validation MSE scores are 164.43, 170.09, 178.88, 321.36, and 203.51. For the model with both temperature and pm25 concentration, the MSE scores are 140.53, 170.13, 183.30, 150.67, and 122.85. The dataset has the previously mentioned spike in deaths during the heat wave of 1995; random selection should split up this data, but it may explain the anomalously high MSE values for folds 4 and 5 of the temperature-only dataset if the heat wave days ended up exclusively in that fold. The model with both temperature and pm25 appears to perform better, with lower MSE scores, although not by much. 
 
-## References
+### Problem 2.5
+
+I was unfortunately unable to calculate AIC. 
+
+
+
+

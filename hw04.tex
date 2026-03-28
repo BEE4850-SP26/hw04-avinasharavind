@@ -1,0 +1,365 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+\usepackage{xcolor}
+\usepackage[tmargin=30mm,bmargin=30mm]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\@ifpackageloaded{fontawesome5}{}{\usepackage{fontawesome5}}
+\definecolor{quarto-callout-color}{HTML}{909090}
+\definecolor{quarto-callout-note-color}{HTML}{0758E5}
+\definecolor{quarto-callout-important-color}{HTML}{CC1914}
+\definecolor{quarto-callout-warning-color}{HTML}{EB9113}
+\definecolor{quarto-callout-tip-color}{HTML}{00A047}
+\definecolor{quarto-callout-caution-color}{HTML}{FC5300}
+\definecolor{quarto-callout-color-frame}{HTML}{acacac}
+\definecolor{quarto-callout-note-color-frame}{HTML}{4582ec}
+\definecolor{quarto-callout-important-color-frame}{HTML}{d9534f}
+\definecolor{quarto-callout-warning-color-frame}{HTML}{f0ad4e}
+\definecolor{quarto-callout-tip-color-frame}{HTML}{02b875}
+\definecolor{quarto-callout-caution-color-frame}{HTML}{fd7e14}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Homework 4: Model Selecction},
+  pdfauthor={Avinash Aravind, aa2476},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{Homework 4: Model Selecction}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{BEE 4850/5850}
+\author{Avinash Aravind, aa2476}
+\date{2026-03-27}
+\begin{document}
+\maketitle
+
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+showspaces = false,
+showtabs = false,
+breaksymbolleft={},
+breaklines
+% Note: setting commandchars=\\\{\} here will cause an error
+}
+
+\renewcommand*\contentsname{Contents}
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+
+\begin{tcolorbox}[enhanced jigsaw, left=2mm, breakable, leftrule=.75mm, colframe=quarto-callout-note-color-frame, toptitle=1mm, coltitle=black, toprule=.15mm, rightrule=.15mm, bottomtitle=1mm, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, bottomrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Note}, arc=.35mm, opacitybacktitle=0.6, opacityback=0, colback=white]
+
+All of the code used in this homework is accessible in the hw04.ipynb
+file in my GitHub repository.
+
+\end{tcolorbox}
+
+\newpage
+
+\section{Problem 1: Cherry Blossoms and
+Temperature}\label{problem-1-cherry-blossoms-and-temperature}
+
+\subsubsection{Problem 1.1}\label{problem-1.1}
+
+\begin{figure}[h]
+
+\centering{
+
+\includegraphics[width=4.5in,height=\textheight,keepaspectratio]{"figs/11.png"}
+
+}
+
+\caption{\label{fig-11}March Temperature Anomalies and Cherry Blossom
+Bloom Date}
+
+\end{figure}%
+
+The linear fit suggests that increasing temprature anomalies lead to a
+decrease in the date of year that the cherry blossom bloom peaks; that
+is, the bloom occurs earlier in the year. The slope of fit is about
+-7.8, which suggests that a 1 degree C increase in temperature anomaly
+leads to a bloom more than one week earlier.
+
+\subsubsection{Problem 1.2}\label{problem-1.2}
+
+The mean-squared error for this fitted model on the in-sample data is
+about 22.32. I was unfortunately having trouble implementing the
+log-loss in my code; I will attempt to understand how to implement this
+after the solutions are released.
+
+\subsubsection{Problem 1.3}\label{problem-1.3}
+
+Using 5-fold cross-validation, the mean-squred errors for each fold were
+roughly similar to the in-sample data, with MSE values from my run of
+34.68, 23.15, 20.46, 22.82, and 18.74. Some of the folds have a
+lower/better MSE than the full dataset, and some have a higher/worse
+MSE, but there are no major differences.
+
+\newpage
+
+\subsubsection{Problem 1.4}\label{problem-1.4}
+
+This model is relatively generalizable. The 5-fold cross-validation did
+not produce meaningfully worse MSE values than the in-sample model,
+suggesting that the model was not learning much more information from
+the full dataset that it could not learn from a much smaller subset.
+Thus, this model should be similarly good at predicting unseen values as
+it is at predicting in-sample values.
+
+\newpage
+
+\section{Problem 2: Back in Chicago}\label{problem-2-back-in-chicago}
+
+\subsubsection{Problem 2.1}\label{problem-2.1}
+
+\begin{figure}[h]
+
+\centering{
+
+\includegraphics[width=4.5in,height=\textheight,keepaspectratio]{"figs/21.png"}
+
+}
+
+\caption{\label{fig-21}Chicago Deaths vs.~Time with Linear Fit}
+
+\end{figure}%
+
+The linear regression coefficient for this fit is -1.76e-17, very close
+to zero, and the intercept is 128.75. As visible in Figure~\ref{fig-21},
+there is basically no change in the model predicted number of deaths
+through time, predicting about 129 deaths throughout the time period.
+
+\newpage
+
+\subsubsection{Problem 2.2}\label{problem-2.2}
+
+\begin{figure}[h]
+
+\centering{
+
+\includegraphics[width=4.5in,height=\textheight,keepaspectratio]{"figs/22.png"}
+
+}
+
+\caption{\label{fig-22}Chicago Deaths vs.~Temperature with Linear Fit}
+
+\end{figure}%
+
+The linear regression coefficient for this fit is -0.29, and the
+intercept is 129.96. Unlike the time fit, there is a trend in
+Figure~\ref{fig-22}, with the coefficient suggesting that the model
+predicts a decrease of a bit less than 1 death per 3 degrees increase in
+mean daily temperature. The scatterplot of data appears to follow this
+decreasing trend; however, the model grossly underestimates the very
+high deaths during the heat wave.
+
+\newpage
+
+\subsubsection{Problem 2.3}\label{problem-2.3}
+
+\begin{figure}[h]
+
+\centering{
+
+\includegraphics[width=4.5in,height=\textheight,keepaspectratio]{"figs/23.png"}
+
+}
+
+\caption{\label{fig-23}Chicago Deaths vs.~Temperature with Linear Fit
+incorporating PM25}
+
+\end{figure}%
+
+The linear regression coefficients for this fit are -0.37 and 0.215, and
+the intercept is 129.29. When incorporating the median pm25
+concentration, the model predicts a greater decrease in temperature for
+a given decrease in . However, it also predicts an increase in deaths
+with increasing pm25 concentration. The resulting slope in
+Figure~\ref{fig-23} is thus very similar to the one in
+Figure~\ref{fig-22}.
+
+\newpage
+
+\subsubsection{Problem 2.4}\label{problem-2.4}
+
+For the model with temperature only, the 5-fold cross-validation MSE
+scores are 164.43, 170.09, 178.88, 321.36, and 203.51. For the model
+with both temperature and pm25 concentration, the MSE scores are 140.53,
+170.13, 183.30, 150.67, and 122.85. The dataset has the previously
+mentioned spike in deaths during the heat wave of 1995; random selection
+should split up this data, but it may explain the anomalously high MSE
+values for folds 4 and 5 of the temperature-only dataset if the heat
+wave days ended up exclusively in that fold. The model with both
+temperature and pm25 appears to perform better, with lower MSE scores,
+although not by much.
+
+\subsubsection{Problem 2.5}\label{problem-2.5}
+
+I was unfortunately unable to calculate AIC.
+
+
+
+
+\end{document}
